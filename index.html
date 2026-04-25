@@ -3,314 +3,90 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>לוח מעקב חופשות וחגים</title>
+<title>לוח חופשות</title>
+
 <style>
-:root{--bg:#f8fafc;--card:#fff;--line:#e2e8f0;--text:#0f172a;--muted:#64748b;--me:#059669;--her:#f59e0b;--soft:#f1f5f9;--danger:#be123c;--dangerbg:#fff1f2}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.wrap{max-width:1200px;margin:0 auto;padding:18px}
-.grid{display:grid;gap:16px}
-.top{grid-template-columns:1.5fr .9fr}.stats{grid-template-columns:repeat(4,1fr)}.main{grid-template-columns:1.25fr .75fr}.two{grid-template-columns:1fr 1fr}
-.hero,.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 1px 4px rgba(15,23,42,.04)}
-.hero{padding:24px}.panel{padding:18px}
-h1,h2,h3{margin:0}.muted{color:var(--muted)}
-.badge{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px}
-.controls,.tabs,.toolbar{display:flex;gap:10px;flex-wrap:wrap}
-select,button{font:inherit}
-select{border:1px solid #cbd5e1;background:#fff;border-radius:14px;padding:10px 12px;width:100%}
-button{border:1px solid #cbd5e1;background:#fff;border-radius:14px;padding:10px 14px;cursor:pointer}
-button.primary,.tab-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
-.hidden{display:none}
-.stat .n{font-size:28px;font-weight:700;margin-top:10px}
-.section-title{font-size:22px;font-weight:700;margin-bottom:12px}
-.list{display:grid;gap:10px}
-.event{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
-.pill{display:inline-block;padding:8px 14px;border-radius:999px;color:#fff;font-size:14px;font-weight:700;white-space:nowrap}
-.me{background:var(--me)}.her{background:var(--her)}
-.warn{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;background:var(--dangerbg);color:var(--danger);font-size:12px;border:1px solid #fecdd3}
-.minirow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9}.minirow:last-child{border-bottom:none}
-.softbox{background:var(--soft);border-radius:16px;padding:12px;color:var(--muted)}
-.simple-row{display:flex;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff}
-@media(max-width:920px){.top,.stats,.main,.two{grid-template-columns:1fr}.wrap{padding:12px}}
+body{font-family:Arial;background:#f5f7fa;margin:0;padding:20px}
+.wrap{max-width:800px;margin:auto}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;border:1px solid #ddd}
+.me{background:#059669;color:#fff;padding:6px 14px;border-radius:999px}
+.her{background:#f59e0b;color:#fff;padding:6px 14px;border-radius:999px}
+select{padding:10px;border-radius:10px;margin-bottom:20px}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-<div class="grid top">
-  <div class="hero">
-    <div class="badge">לוח מעקב חופשות וחגים</div>
-    <h1 style="margin-top:10px">לוח מעקב חופשות וחגים</h1>
-    <p class="muted" style="margin:10px 0 0">
-      מקור אמת: <strong>אצלו = אני</strong>, <strong>אצלה = היא</strong>.  
-      2025–2026 עודכן כך שכיפור, עצמאות, ל״ג בעומר ושבועות הם <strong>אצלי</strong>.
-    </p>
-  </div>
+<select id="yearSelect">
+  <option value="2023">2023</option>
+  <option value="2024">2024</option>
+  <option value="2025-2026" selected>2025–2026</option>
+</select>
 
-  <div class="panel">
-    <h3>חוקי מערכת</h3>
-    <div class="list" style="margin-top:12px">
-      <div class="badge">שעת החלפה: 08:00</div>
-      <div class="badge">ימי הולדת: אני לוקח</div>
-      <div class="badge">חוגים: אני לוקח</div>
-      <div class="badge">חג גובר על שגרה</div>
-      <div class="badge">שנים: 2023, 2024, 2025–2026</div>
-    </div>
-  </div>
-</div>
-
-<div class="grid stats" style="margin-top:16px">
-  <div class="panel stat"><div class="muted">אירועים</div><div id="eventsCount" class="n">0</div></div>
-  <div class="panel stat"><div class="muted">אצלי</div><div id="meCount" class="n">0</div></div>
-  <div class="panel stat"><div class="muted">אצלה</div><div id="herCount" class="n">0</div></div>
-  <div class="panel stat"><div class="muted">הערות</div><div id="notesCount" class="n">0</div></div>
-</div>
-
-<div class="panel" style="margin-top:16px">
-  <div class="controls">
-    <div style="min-width:180px;flex:1"><select id="yearSelect"></select></div>
-    <div style="min-width:180px;flex:1">
-      <select id="typeFilter">
-        <option value="all">הכול</option>
-        <option value="holiday">חגים</option>
-        <option value="vacation">חופשות</option>
-        <option value="special">אירועים מיוחדים</option>
-      </select>
-    </div>
-    <div style="min-width:180px;flex:1">
-      <select id="ownerFilter">
-        <option value="all">אצלי + אצלה</option>
-        <option value="father">רק אצלי</option>
-        <option value="mother">רק אצלה</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="toolbar" style="margin-top:12px">
-    <button onclick="copyCurrentLink()">העתק לינק</button>
-    <button class="primary" onclick="shareCurrentLink()">שיתוף</button>
-  </div>
-
-  <div class="tabs" style="margin-top:14px">
-    <button class="tab-btn active" data-tab="schedule">חגים וחופשות</button>
-    <button class="tab-btn" data-tab="compare">השוואת שנים</button>
-    <button class="tab-btn" data-tab="birthdays">ימי הולדת</button>
-    <button class="tab-btn" data-tab="classes">חוגים</button>
-    <button class="tab-btn" data-tab="expenses">הוצאות</button>
-  </div>
-</div>
-
-<div id="tab-schedule" style="margin-top:16px">
-  <div class="grid main">
-    <div class="panel">
-      <div class="section-title">אירועי השנה</div>
-      <div id="eventsList" class="list"></div>
-    </div>
-
-    <div class="panel">
-      <div class="section-title">סיכום</div>
-      <div class="minirow"><span>מקור אמת</span><strong>אצלו / אצלה</strong></div>
-      <div class="minirow"><span>אצלו</span><strong>אני</strong></div>
-      <div class="minirow"><span>אצלה</span><strong>היא</strong></div>
-      <div class="minirow"><span>2025–2026</span><strong>מעודכן ידנית</strong></div>
-      <div class="softbox" style="margin-top:12px">
-        אם יש שורה אחת לא נכונה — מתקנים רק אותה לפי שנה ושם חג.
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="tab-compare" class="hidden" style="margin-top:16px">
-  <div class="grid two">
-    <div class="panel"><div class="section-title">2024</div><div id="compare2024" class="list"></div></div>
-    <div class="panel"><div class="section-title">2025–2026</div><div id="compare2025" class="list"></div></div>
-  </div>
-</div>
-
-<div id="tab-birthdays" class="hidden" style="margin-top:16px">
-  <div class="panel">
-    <div class="section-title">ימי הולדת</div>
-    <div class="simple-row">
-      <div><strong>כל ימי ההולדת</strong><div class="muted">מאז הגירושין אני לוקח וממשיך לקחת</div></div>
-      <span class="pill me">אצלי</span>
-    </div>
-  </div>
-</div>
-
-<div id="tab-classes" class="hidden" style="margin-top:16px">
-  <div class="panel">
-    <div class="section-title">חוגים</div>
-    <div class="simple-row">
-      <div><strong>חוגים</strong><div class="muted">כרגע מוגדר שאני לוקח</div></div>
-      <span class="pill me">אצלי</span>
-    </div>
-  </div>
-</div>
-
-<div id="tab-expenses" class="hidden" style="margin-top:16px">
-  <div class="panel">
-    <div class="section-title">הוצאות למעקב</div>
-    <div class="list">
-      <div class="simple-row"><div><strong>רפואה</strong><div class="muted">שיניים, סופר־פארם, תרופות, בדיקות</div></div></div>
-      <div class="simple-row"><div><strong>צהרון</strong><div class="muted">הוצאה קבועה</div></div></div>
-      <div class="simple-row"><div><strong>חוגים</strong><div class="muted">עלות חודשית / תקופתית</div></div></div>
-      <div class="simple-row"><div><strong>ימי הולדת</strong><div class="muted">מתנות, הפקה, הוצאות נלוות</div></div></div>
-    </div>
-  </div>
-</div>
+<div id="list"></div>
 
 </div>
 
 <script>
-const owners = {
-  father: "אצלי",
-  mother: "אצלה"
-};
 
-/*
-father = אצלו = אני
-mother = אצלה = היא
-*/
-
-const dataByYear = {
-  "2024": [
-    {key:"rosh", name:"ראש השנה", category:"holiday", date:"02.10–04.10", days:"רביעי–שישי", owner:"father"},
-    {key:"kippur", name:"כיפור", category:"holiday", date:"11.10–12.10", days:"שישי–שבת", owner:"mother"},
-    {key:"between1", name:"חופשה בין כיפור לסוכות", category:"vacation", date:"13.10–14.10", days:"ראשון–שני", owner:"mother"},
-    {key:"between2", name:"חופשה בין כיפור לסוכות 2", category:"vacation", date:"15.10", days:"שלישי", owner:"father", note:"יום בודד / יש קייטנה"},
-    {key:"sukkotA", name:"סוכות א׳", category:"holiday", date:"16.10–20.10", days:"רביעי–ראשון", owner:"father"},
-    {key:"sukkotB", name:"סוכות ב׳", category:"holiday", date:"21.10–24.10", days:"שני–חמישי", owner:"mother"},
-    {key:"isruSukkot", name:"אסרו חג סוכות", category:"special", date:"25.10", days:"יש לימודים", owner:"mother"},
-    {key:"hanukkah1", name:"חנוכה חלק א׳", category:"holiday", date:"27.12–30.12 + 02.01", days:"חמישי–שני + חמישי", owner:"father"},
-    {key:"hanukkah2", name:"חנוכה חלק ב׳", category:"holiday", date:"31.12–01.01", days:"שלישי–רביעי", owner:"mother"},
-    {key:"purim1", name:"פורים", category:"holiday", date:"14.03–15.03", days:"שישי–שבת", owner:"mother"},
-    {key:"purim2", name:"פורים / שושן פורים", category:"holiday", date:"16.03", days:"ראשון", owner:"father"},
-    {key:"pesachPre1", name:"חופשת קדם פסח", category:"vacation", date:"04.04–07.04", days:"שישי–שני", owner:"father"},
-    {key:"pesachPre2", name:"חופשת קדם פסח 2", category:"vacation", date:"08.04–11.04", days:"שלישי–שישי", owner:"mother", note:"לשים קייטנה 8.4"},
-    {key:"pesachA", name:"ליל הסדר / פסח א׳", category:"holiday", date:"12.04–15.04", days:"שבת–שלישי", owner:"mother"},
-    {key:"pesachB", name:"חול המועד / פסח ב׳", category:"holiday", date:"16.04–19.04", days:"רביעי–שבת", owner:"father"},
-    {key:"isruPesach", name:"אסרו חג פסח", category:"special", date:"20.04", days:"יש לימודים", owner:"father"},
-    {key:"memorial", name:"ערב יום העצמאות / יום הזיכרון", category:"special", date:"30.04", days:"לילדים עד 12:00", owner:"mother"},
-    {key:"independence", name:"יום העצמאות", category:"holiday", date:"01.05", days:"חמישי", owner:"mother"},
-    {key:"lag", name:"ל״ג בעומר", category:"holiday", date:"16.05", days:"יש לימודים", owner:"mother"},
-    {key:"shavuot", name:"שבועות", category:"holiday", date:"01.06–02.06", days:"ראשון–שני", owner:"father"}
-  ],
-
-  "2025": [
-    {key:"rosh", name:"ראש השנה", category:"holiday", date:"22.09–24.09", days:"שני–רביעי", owner:"mother"},
-    {key:"kippur", name:"כיפור", category:"holiday", date:"01.10–02.10", days:"רביעי–חמישי", owner:"father"},
-    {key:"between1", name:"חופשה בין כיפור לסוכות", category:"vacation", date:"03.10–04.10", days:"שישי–שבת", owner:"mother"},
-    {key:"between2", name:"חופשה בין כיפור לסוכות 2", category:"vacation", date:"05.10–06.10", days:"ראשון–שני", owner:"father"},
-    {key:"sukkotA", name:"סוכות א׳", category:"holiday", date:"10.10–14.10", days:"שישי–שלישי", owner:"mother"},
-    {key:"sukkotB", name:"סוכות ב׳", category:"holiday", date:"15.10–16.10", days:"רביעי–חמישי", owner:"father"},
-    {key:"isruSukkot", name:"אסרו חג סוכות", category:"special", date:"15.10", days:"יש לימודים", owner:"father"},
-    {key:"hanukkah1", name:"חנוכה חלק א׳", category:"holiday", date:"16.12–17.12, 19.12–21.12", days:"שלישי–רביעי + שישי–ראשון", owner:"mother"},
-    {key:"hanukkah2", name:"חנוכה חלק ב׳", category:"holiday", date:"18.12, 22.12", days:"חמישי + שני", owner:"father"},
-    {key:"purim1", name:"פורים", category:"holiday", date:"03.04", days:"יום אחד", owner:"mother"},
-    {key:"purim2", name:"פורים / שושן פורים", category:"holiday", date:"04.03", days:"יום אחד", owner:"father"},
-    {key:"pesachPre1", name:"חופשת קדם פסח", category:"vacation", date:"24.03–27.03", days:"שני–חמישי", owner:"mother"},
-    {key:"pesachPre2", name:"חופשת קדם פסח 2", category:"vacation", date:"28.03–31.03", days:"שישי–שני", owner:"father"},
-    {key:"pesachA", name:"ערב חג פסח + חול המועד", category:"holiday", date:"01.04–04.04", days:"רביעי–שבת", owner:"mother"},
-    {key:"pesachB", name:"חול המועד + חג פסח שני", category:"holiday", date:"05.04–08.04", days:"ראשון–רביעי", owner:"father"},
-    {key:"isruPesach", name:"אסרו חג פסח", category:"special", date:"09.04", days:"יש לימודים", owner:"father"},
-    {key:"memorial", name:"ערב יום העצמאות / יום הזיכרון", category:"special", date:"20.04", days:"עד 12:00", owner:"father"},
-    {key:"independence", name:"יום העצמאות", category:"holiday", date:"21.04", days:"שלישי", owner:"father"},
-    {key:"lag", name:"ל״ג בעומר", category:"holiday", date:"05.05", days:"יום אחד", owner:"father"},
-    {key:"shavuot", name:"שבועות", category:"holiday", date:"21.05–22.05", days:"חמישי–שישי", owner:"father"}
-  ],
-
-  "2023": [
-    {key:"rosh", name:"ראש השנה", category:"holiday", date:"15.09–17.09", days:"שישי–ראשון", owner:"father"},
-    {key:"kippur", name:"כיפור", category:"holiday", date:"24.09–25.09", days:"ראשון–שני", owner:"mother"},
-    {key:"sukkotA", name:"סוכות א׳", category:"holiday", date:"29.09–03.10", days:"שישי–שלישי", owner:"father"},
-    {key:"sukkotB", name:"סוכות ב׳", category:"holiday", date:"04.10–07.10", days:"רביעי–שבת", owner:"mother"},
-    {key:"hanukkah", name:"חנוכה", category:"holiday", date:"12.12–14.12", days:"לפי הטבלה", owner:"father"},
-    {key:"purim", name:"פורים", category:"holiday", date:"23.03–24.03", days:"לפי הטבלה", owner:"mother"},
-    {key:"pesachA", name:"פסח א׳", category:"holiday", date:"18.04–21.04", days:"חמישי–ראשון", owner:"father"},
-    {key:"pesachB", name:"פסח ב׳", category:"holiday", date:"22.04–29.04", days:"לפי הטבלה", owner:"mother"},
-    {key:"independence", name:"יום העצמאות", category:"holiday", date:"14.05", days:"שלישי", owner:"mother"},
-    {key:"lag", name:"ל״ג בעומר", category:"holiday", date:"26.05", days:"ראשון", owner:"mother"},
-    {key:"shavuot", name:"שבועות", category:"holiday", date:"11.06–12.06", days:"שלישי–רביעי", owner:"father"}
-  ]
-};
-
-function ownerPill(owner){
-  return '<span class="pill '+(owner==="father"?"me":"her")+'">'+owners[owner]+'</span>';
+// 🔥 פונקציה שקובעת אצלי / אצלה לפי שנה
+function getOwner(year){
+  return year % 2 === 0 ? "mother" : "father";
 }
 
-function copyCurrentLink(){
-  navigator.clipboard.writeText(window.location.href).then(()=>alert("הלינק הועתק"));
-}
+// 🔥 כל החגים עם השנה האמיתית שלהם
+const holidays = [
+  {name:"ראש השנה", year:2025},
+  {name:"כיפור", year:2025},
+  {name:"סוכות א", year:2025},
+  {name:"סוכות ב", year:2025},
+  {name:"חנוכה", year:2025},
 
-function shareCurrentLink(){
-  if(navigator.share){
-    navigator.share({title:"לוח מעקב חופשות וחגים",url:window.location.href}).catch(()=>{});
-  }else{
-    copyCurrentLink();
-  }
-}
+  {name:"פורים", year:2026},
+  {name:"פסח א", year:2026},
+  {name:"פסח ב", year:2026},
+  {name:"עצמאות", year:2026},
+  {name:"ל״ג בעומר", year:2026},
+  {name:"שבועות", year:2026}
+];
 
 function render(){
-  const year = document.getElementById("yearSelect").value;
-  const type = document.getElementById("typeFilter").value;
-  const owner = document.getElementById("ownerFilter").value;
+  const val = document.getElementById("yearSelect").value;
+  let data = [];
 
-  let items = [...(dataByYear[year] || [])];
+  if(val === "2025-2026"){
+    data = holidays;
+  }
 
-  if(type !== "all") items = items.filter(x => x.category === type);
-  if(owner !== "all") items = items.filter(x => x.owner === owner);
+  if(val === "2024"){
+    data = holidays.map(h => ({...h, year:h.year-1}));
+  }
 
-  document.getElementById("eventsList").innerHTML = items.map(item => `
-    <div class="event">
-      <div>
-        <div style="font-weight:700">${item.name}</div>
-        <div class="muted">${item.date} · ${item.days}</div>
-        ${item.note ? `<div class="warn">${item.note}</div>` : ``}
+  if(val === "2023"){
+    data = holidays.map(h => ({...h, year:h.year-2}));
+  }
+
+  const html = data.map(h=>{
+    const owner = getOwner(h.year);
+    return `
+      <div class="card">
+        <div>${h.name} (${h.year})</div>
+        <div class="${owner === "father" ? "me" : "her"}">
+          ${owner === "father" ? "אצלי" : "אצלה"}
+        </div>
       </div>
-      ${ownerPill(item.owner)}
-    </div>
-  `).join("");
+    `;
+  }).join("");
 
-  const all = dataByYear[year] || [];
-  document.getElementById("eventsCount").textContent = all.length;
-  document.getElementById("meCount").textContent = all.filter(x=>x.owner==="father").length;
-  document.getElementById("herCount").textContent = all.filter(x=>x.owner==="mother").length;
-  document.getElementById("notesCount").textContent = all.filter(x=>x.note).length;
-
-  document.getElementById("compare2024").innerHTML = dataByYear["2024"].map(item => `
-    <div class="event"><div><strong>${item.name}</strong><div class="muted">${item.date}</div></div>${ownerPill(item.owner)}</div>
-  `).join("");
-
-  document.getElementById("compare2025").innerHTML = dataByYear["2025"].map(item => `
-    <div class="event"><div><strong>${item.name}</strong><div class="muted">${item.date}</div></div>${ownerPill(item.owner)}</div>
-  `).join("");
+  document.getElementById("list").innerHTML = html;
 }
 
-const yearSelect = document.getElementById("yearSelect");
-const yearLabels = {"2023":"2023","2024":"2024","2025":"2025–2026"};
-["2023","2024","2025"].forEach(y=>{
-  const opt=document.createElement("option");
-  opt.value=y;
-  opt.textContent=yearLabels[y];
-  if(y==="2025") opt.selected=true;
-  yearSelect.appendChild(opt);
-});
-
-document.getElementById("typeFilter").addEventListener("change",render);
-document.getElementById("ownerFilter").addEventListener("change",render);
-yearSelect.addEventListener("change",render);
-
-document.querySelectorAll(".tab-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    document.querySelectorAll("[id^='tab-']").forEach(tab=>tab.classList.add("hidden"));
-    document.getElementById("tab-"+btn.dataset.tab).classList.remove("hidden");
-  });
-});
+document.getElementById("yearSelect").addEventListener("change", render);
 
 render();
+
 </script>
+
 </body>
 </html>
