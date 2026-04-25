@@ -20,29 +20,6 @@
             padding: 1.25rem;
             margin-bottom: 1rem;
         }
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 0;
-        }
-        .custom-checkbox {
-            width: 1.2rem;
-            height: 1.2rem;
-            border-radius: 0.375rem;
-            border: 2px solid #cbd5e1;
-            cursor: pointer;
-        }
-        .custom-checkbox:checked {
-            background-color: #10b981;
-            border-color: #10b981;
-        }
-        .editable-field {
-            border-bottom: 1px dashed #cbd5e1;
-            padding: 2px 4px;
-            min-width: 50px;
-            display: inline-block;
-        }
         .toast {
             visibility: hidden;
             min-width: 250px;
@@ -71,7 +48,7 @@
         <!-- Header -->
         <header class="text-center mt-6 mb-8">
             <h1 class="text-3xl font-extrabold text-slate-800">מעקב חופשות והוצאות</h1>
-            <p class="text-slate-500 font-semibold">סנכרון תכניות וניהול שוטף</p>
+            <p class="text-slate-500 font-semibold italic">סינכרון סופי - "אצלי" = אבא</p>
             
             <div class="flex justify-center gap-3 mt-6">
                 <button onclick="copyLink()" class="bg-white border border-slate-200 px-4 py-2 rounded-2xl text-slate-600 text-sm font-bold shadow-sm flex items-center gap-2">
@@ -91,8 +68,8 @@
                 <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
                     <span>📅</span> חגים וחופשות
                 </h2>
-                <select id="yearSelect" class="text-xs font-bold bg-white border border-slate-200 rounded-lg p-2 shadow-sm outline-none">
-                    <option value="2025-2026">שנת 2025-26</option>
+                <select id="yearSelect" onchange="render()" class="text-xs font-bold bg-white border border-slate-200 rounded-lg p-2 shadow-sm outline-none cursor-pointer">
+                    <option value="2025-2026">שנת 2025-26 (מעודכן)</option>
                     <option value="2023-2024">שנת 2023-24</option>
                 </select>
             </div>
@@ -101,10 +78,8 @@
 
         <hr class="border-slate-200 mb-10">
 
-        <!-- חלק תחתון: ניהול והוצאות (נקי מנתונים מומצאים) -->
+        <!-- חלק תחתון -->
         <div class="space-y-8">
-            
-            <!-- 🎉 חגיגות יום הולדת -->
             <section>
                 <h2 class="text-lg font-black text-slate-700 mb-3 flex items-center gap-2 px-2">
                     <span>🎉</span> חגיגות ימי הולדת
@@ -112,114 +87,96 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="section-card border-r-4 border-r-pink-400">
                         <h3 class="font-bold text-pink-600 mb-2">חגיגה 1</h3>
-                        <div class="space-y-1 text-sm">
-                            <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label>תכנון אירוע</label></div>
-                            <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label>רכישת מתנה</label></div>
-                            <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label>כיבוד/עוגה</label></div>
-                        </div>
+                        <div class="space-y-1 text-sm italic text-slate-400">הזן פרטים...</div>
                     </div>
                     <div class="section-card border-r-4 border-r-purple-400">
                         <h3 class="font-bold text-purple-600 mb-2">חגיגה 2</h3>
-                        <div class="space-y-1 text-sm">
-                            <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label>תכנון אירוע</label></div>
-                            <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label>רכישת מתנה</label></div>
-                            <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label>כיבוד/עוגה</label></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 🩺 רפואה וביטוחים -->
-            <section>
-                <h2 class="text-lg font-black text-slate-700 mb-3 flex items-center gap-2 px-2">
-                    <span>🩺</span> רפואה וביטוחים
-                </h2>
-                <div class="section-card">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="font-bold text-blue-600 text-sm mb-3">תורים ובדיקות</h4>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between items-center p-2 bg-blue-50 rounded-lg">
-                                    <span>🦷 רופא שיניים</span>
-                                    <span class="font-bold text-blue-700 italic">הזן תאריך</span>
-                                </div>
-                                <div class="flex justify-between items-center p-2 bg-slate-50 rounded-lg">
-                                    <span>👩‍⚕️ בדיקה תקופתית</span>
-                                    <span class="text-slate-400 italic">הזן תאריך</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-rose-600 text-sm mb-3">מידע ביטוחי וקופה</h4>
-                            <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
-                                <p class="text-[10px] font-bold text-rose-800 uppercase mb-1">חברת ביטוח ופוליסה:</p>
-                                <p class="text-sm text-rose-700 font-bold mb-3 italic">לחץ לעריכה</p>
-                                <p class="text-[10px] font-bold text-rose-800 uppercase mb-1">קוד אישי/גישה לקופה:</p>
-                                <p class="text-sm font-bold text-rose-700 italic">לחץ לעריכה</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 💰 מעקב הוצאות -->
-            <section>
-                <h2 class="text-lg font-black text-slate-700 mb-3 flex items-center gap-2 px-2">
-                    <span>💰</span> מעקב הוצאות משותפות
-                </h2>
-                <div class="section-card">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                            <p class="text-[10px] text-slate-400 font-bold mb-1">הוצאה חודשית</p>
-                            <p class="text-lg font-black text-slate-700 italic">₪0</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                            <p class="text-[10px] text-slate-400 font-bold mb-1">סטטוס תשלומים</p>
-                            <p class="text-lg font-black text-slate-700 italic">--</p>
-                        </div>
-                    </div>
-                    <div class="mt-4 space-y-2">
-                        <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label class="text-sm">ביגוד (חורף/קיץ)</label></div>
-                        <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label class="text-sm">תספורות</label></div>
-                        <div class="checkbox-item"><input type="checkbox" class="custom-checkbox"><label class="text-sm">חוגים/פעילויות</label></div>
+                        <div class="space-y-1 text-sm italic text-slate-400">הזן פרטים...</div>
                     </div>
                 </div>
             </section>
         </div>
-
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast">הפעולה בוצעה בהצלחה!</div>
 
     <script>
-        const holidays = [
-            { name: "ראש השנה", date: "2025-09-22", displayDate: "22.09 - 24.09", owner: "father", icon: "🍎" },
-            { name: "כיפור", date: "2025-10-01", displayDate: "01.10 - 02.10", owner: "mother", icon: "⛪" },
-            { name: "סוכות א'", date: "2025-10-06", displayDate: "06.10 - 10.10", owner: "father", icon: "🌿" },
-            { name: "סוכות ב'", date: "2025-10-14", displayDate: "14.10 - 20.10", owner: "mother", icon: "📜" },
-            { name: "חנוכה", date: "2025-12-16", displayDate: "16.12 - 21.12", owner: "mother", icon: "🕎" },
-            { name: "פורים", date: "2026-03-04", displayDate: "04.03", owner: "father", icon: "🎭" },
-            { name: "פסח א'", date: "2026-03-24", displayDate: "24.03 - 27.03", owner: "mother", icon: "🍷" },
-            { name: "פסח ב'", date: "2026-03-31", displayDate: "31.03", owner: "father", icon: "🥗" }
+        /**
+         * מפתח פיענוח סופי בהחלט:
+         * "אצלי" (באפליקציה) = אבא (המשתמש)
+         * "אצל אמא" (באפליקציה) = אמא
+         */
+
+        // נתונים מדויקים 25-26 לפי הבקשה האחרונה
+        const holidays2526 = [
+            { name: "ראש השנה", date: "22.09-24.09", owner: "father", icon: "🍎" }, // ראש השנה אצלי (אבא)
+            { name: "כיפור", date: "01.10-02.10", owner: "mother", icon: "⛪" },    // כיפור אצלה (אמא)
+            { name: "חופש בין חגים (כיפור לסוכות)", date: "03.10-04.10", owner: "mother", icon: "🗓️" },
+            { name: "חופש בין חגים (כיפור לסוכות)", date: "04.10-05.10", owner: "father", icon: "🗓️" },
+            { name: "סוכות א'", date: "06.10-10.10", owner: "father", icon: "🌿" }, // סוכות א' אצלי (אבא)
+            { name: "סוכות ב'", date: "14.10-20.10", owner: "mother", icon: "📜" }, // סוכות ב' אצלה (אמא)
+            { name: "אסרו חג סוכות", date: "21.10", owner: "none", icon: "🛑" },
+            { name: "חנוכה", date: "16.12-21.12", owner: "mother", icon: "🕎" },
+            { name: "חנוכה", date: "22.12-24.12", owner: "father", icon: "🕎" },
+            { name: "חג פורים", date: "03.03", owner: "mother", icon: "🎭" },
+            { name: "פורים (שושן פורים)", date: "04.03", owner: "father", icon: "🎭" },
+            { name: "חופשת קדם פסח", date: "24.03-27.03", owner: "father", icon: "🧹" },
+            { name: "חופשת קדם פסח", date: "28.03-31.03", owner: "mother", icon: "🧹" },
+            { name: "ערב חג פסח + חול המועד", date: "01.04-04.04", owner: "father", icon: "🍷" },
+            { name: "חול המועד + חג פסח שני", date: "05.04-08.04", owner: "mother", icon: "🍷" },
+            { name: "אסרו חג פסח", date: "09.04", owner: "none", icon: "🛑" },
+            { name: "ערב יום הזיכרון/עצמאות", date: "20.04", owner: "mother", icon: "🕯️" },
+            { name: "יום העצמאות", date: "21.04", owner: "mother", icon: "🇮🇱" },
+            { name: "ל\"ג בעומר", date: "05.05", owner: "mother", icon: "🔥" },
+            { name: "שבועות", date: "21.05-22.05", owner: "father", icon: "🌾" }
+        ];
+
+        const holidays2324 = [
+            { name: "ראש השנה", date: "15.09-17.09", owner: "mother", icon: "🍎" },
+            { name: "כיפור", date: "24.09-25.09", owner: "father", icon: "⛪" },
+            { name: "חופש בין החגים", date: "26.09-27.09", owner: "father", icon: "🗓️" },
+            { name: "סוכות א'", date: "29.09-03.10", owner: "mother", icon: "🌿" },
+            { name: "סוכות ב'", date: "04.10-06.10", owner: "father", icon: "📜" },
+            { name: "חנוכה", date: "07.12-11.12", owner: "father", icon: "🕎" },
+            { name: "חנוכה", date: "12.12-14.12", owner: "mother", icon: "🕎" },
+            { name: "ערב יום העצמאות", date: "13.05", owner: "father", icon: "🕯️" },
+            { name: "יום העצמאות", date: "14.05", owner: "father", icon: "🇮🇱" },
+            { name: "ל\"ג בעומר", date: "26.05", owner: "father", icon: "🔥" },
+            { name: "שבועות", date: "11.06-12.06", owner: "mother", icon: "🌾" }
         ];
 
         function render() {
+            const year = document.getElementById("yearSelect").value;
             const list = document.getElementById("list");
-            list.innerHTML = holidays.map(h => `
-                <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm card-transition">
-                    <div class="flex items-center gap-4">
-                        <span class="text-2xl">${h.icon}</span>
-                        <div>
-                            <p class="font-bold text-slate-800">${h.name}</p>
-                            <p class="text-xs text-slate-400 font-bold">${h.displayDate}</p>
+            const data = year === "2025-2026" ? holidays2526 : holidays2324;
+
+            list.innerHTML = data.map(h => {
+                let badgeClass = "bg-slate-100 text-slate-500";
+                let badgeText = "ללא הסדר";
+                
+                if (h.owner === 'father') {
+                    badgeClass = "bg-emerald-100 text-emerald-700 border border-emerald-200";
+                    badgeText = "אצלי";
+                } else if (h.owner === 'mother') {
+                    badgeClass = "bg-blue-100 text-blue-700 border border-blue-200";
+                    badgeText = "אצל אמא";
+                }
+
+                return `
+                    <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">${h.icon}</span>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800 leading-tight">${h.name}</p>
+                                <p class="text-[10px] text-slate-400 font-bold">${h.date}</p>
+                            </div>
                         </div>
+                        <span class="px-3 py-1 rounded-lg text-[10px] font-black ${badgeClass}">
+                            ${badgeText}
+                        </span>
                     </div>
-                    <span class="px-3 py-1.5 rounded-xl text-xs font-black tracking-tight ${h.owner === 'father' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">
-                        ${h.owner === 'father' ? 'אצל אבא' : 'אצל אמא'}
-                    </span>
-                </div>
-            `).join("");
+                `;
+            }).join("");
         }
 
         function showToast(msg) {
@@ -245,12 +202,12 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'family_tracker.html';
+            a.download = 'family_tracker_correct.html';
             a.click();
-            showToast("💾 הקובץ ירד. שלח אותו בווטסאפ");
+            showToast("💾 הקובץ ירד למכשיר.");
         }
 
-        window.onload = render;
+        render();
     </script>
 </body>
 </html>
